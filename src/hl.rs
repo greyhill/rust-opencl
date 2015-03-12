@@ -9,6 +9,7 @@ use std::mem;
 use std::ptr;
 use std::string::String;
 use std::vec::Vec;
+use std::clone::Clone;
 
 use cl;
 use cl::*;
@@ -841,6 +842,24 @@ impl Drop for Event
     fn drop(&mut self) {
         unsafe {
             clReleaseEvent(self.event);
+        }
+    }
+}
+
+impl Clone for Event {
+    fn clone(self: &Self) -> Self {
+        unsafe {
+            let tr = Event{ event: self.event };
+            clRetainEvent(self.event);
+            tr
+        }
+    }
+
+    fn clone_from(self: &mut Self, source: &Self) -> () {
+        unsafe {
+            clReleaseEvent(self.event);
+            self.event = source.event;
+            clRetainEvent(self.event);
         }
     }
 }
