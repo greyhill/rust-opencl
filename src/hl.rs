@@ -581,6 +581,31 @@ impl CommandQueue
         Event { event: out_event.unwrap() }
     }
 
+    pub fn write_async_offset<U: Write, T, E: EventList, B: Buffer<T>>(&self, mem: &B, write: &U, off: usize, event: E) -> Event
+    {
+        let mut out_event = None;
+        unsafe {
+            event.as_event_list(|evt, evt_len| {
+                write.write(|offset, p, len| {
+                    let mut e: cl_event = ptr::null_mut();
+                    let err = clEnqueueWriteBuffer(self.cqueue,
+                                                   mem.id(),
+                                                   CL_FALSE,
+                                                   off as libc::size_t + offset as libc::size_t,
+                                                   len as libc::size_t,
+                                                   p as *const libc::c_void,
+                                                   evt_len,
+                                                   evt,
+                                                   &mut e);
+                    out_event = Some(e);
+                    check(err, "Failed to write buffer");
+                })
+            })
+        }
+        Event { event: out_event.unwrap() }
+    }
+
+
     pub fn read<T, U: Read, E: EventList, B: Buffer<T>>(&self, mem: &B, read: &mut U, event: E)
     {
         event.as_event_list(|event_list, event_list_length| {
@@ -625,6 +650,31 @@ impl CommandQueue
         }
         Event { event: out_event.unwrap() }
     }
+
+    pub fn read_async_offset<T, U: Read, E: EventList, B: Buffer<T>>(&self, mem: &B, read: &mut U, off: usize, event: E) -> Event
+    {
+        let mut out_event = None;
+        unsafe {
+            event.as_event_list(|evt, evt_len| {
+                read.read(|offset, p, len| {
+                    let mut e: cl_event = ptr::null_mut();
+                    let err = clEnqueueReadBuffer(self.cqueue,
+                                                   mem.id(),
+                                                   CL_FALSE,
+                                                   offset as libc::size_t + off as libc::size_t,
+                                                   len as libc::size_t,
+                                                   p as *mut libc::c_void,
+                                                   evt_len,
+                                                   evt,
+                                                   &mut e);
+                    out_event = Some(e);
+                    check(err, "Failed to read buffer");
+                })
+            })
+        }
+        Event { event: out_event.unwrap() }
+    }
+
 
 }
 
