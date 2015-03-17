@@ -919,9 +919,11 @@ pub trait EventList {
 
     fn wait(&self) {
         self.as_event_list(|p, len| {
-            unsafe {
-                let status = clWaitForEvents(len, p);
-                check(status, "Error waiting for event(s)");
+            if len > 0 {
+                unsafe {
+                    let status = clWaitForEvents(len, p);
+                    check(status, "Error waiting for event(s)");
+                }
             }
         })
     }
