@@ -32,9 +32,9 @@ impl<T: Clone> Array3D<T> {
         where F: Fn(usize, usize, usize) -> T
     {
         let mut dat: Vec<T> = Vec::new();
-        for x in range(0, width) {
-            for y in range(0, height) {
-                for z in range(0, depth) {
+        for x in 0 .. width {
+            for y in 0 .. height {
+                for z in 0 .. depth {
                     dat.push(val(x, y, z));
                 }
             }
@@ -50,7 +50,7 @@ impl<T: Clone> Array3D<T> {
 
     pub fn set(&mut self, x: usize, y: usize, z: usize, val: T)
     {
-        self.dat.as_mut_slice()[self.width*self.height*z + self.width*y + x] = val;
+        (&mut self.dat[..])[self.width*self.height*z + self.width*y + x] = val;
     }
 
     pub fn get(&self, x: usize, y: usize, z: usize) -> T
@@ -134,7 +134,7 @@ impl<T> Read for Array3D<T> {
 }
 
 impl<T> Buffer<T> for Array3DCL<T> {
-    fn id_ptr(&self) -> *const cl_mem {
+    unsafe fn id_ptr(&self) -> *const cl_mem {
         &self.buf as *const cl_mem
     }
 
@@ -169,8 +169,8 @@ impl<T: Clone> Array2D<T> {
         where F: Fn(usize, usize) -> T
     {
         let mut dat: Vec<T> = Vec::new();
-        for x in range(0, width) {
-            for y in range(0, height) {
+        for x in 0 .. width {
+            for y in 0 .. height {
                 dat.push(val(x, y));
             }
         }
@@ -182,7 +182,7 @@ impl<T: Clone> Array2D<T> {
     }
 
     pub fn set(&mut self, x: usize, y: usize, val: T) {
-        self.dat.as_mut_slice()[self.width*y + x] = val;
+        (&mut self.dat[..])[self.width*y + x] = val;
     }
 
     pub fn get(&self, x: usize, y: usize) -> T {
@@ -262,7 +262,7 @@ impl<T> Read for Array2D<T> {
 }
 
 impl<T> Buffer<T> for Array2DCL<T> {
-    fn id_ptr(&self) -> *const cl_mem {
+    unsafe fn id_ptr(&self) -> *const cl_mem {
         &self.buf as *const cl_mem
     }
 
