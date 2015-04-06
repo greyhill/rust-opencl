@@ -751,6 +751,49 @@ impl Program
         }
     }
 
+    /// Build the program for a given device.
+    ///
+    /// Both Ok and Err returns include the build log.
+    pub fn build_with_opts(&self, device: &Device, opts: &str) -> Result<String, String>
+    {
+        unsafe
+        {
+            let opts_cstr = CString::new(opts).ok().expect("null string in build_with_opts?");
+            let ret = clBuildProgram(self.prg, 1, &device.id,
+                                     opts_cstr.as_ptr(),
+                                     mem::transmute(ptr::null::<fn()>()),
+                                     ptr::null_mut());
+            // Get the build log.
+            let mut size = 0 as libc::size_t;
+            let status = clGetProgramBuildInfo(
+                self.prg,
+                device.id,
+                CL_PROGRAM_BUILD_LOG,
+                0,
+                ptr::null_mut(),
+                (&mut size));
+            check(status, "Could not get build log");
+
+            let mut buf : Vec<u8> = repeat(0u8).take(size as usize).collect();
+            let status = clGetProgramBuildInfo(
+                self.prg,
+                device.id,
+                CL_PROGRAM_BUILD_LOG,
+                buf.len() as libc::size_t,
+                buf.as_mut_ptr() as *mut libc::c_void,
+                ptr::null_mut());
+            check(status, "Could not get build log");
+
+            let log = String::from_utf8_lossy(&buf[..]);
+            if ret == CL_SUCCESS as cl_int {
+                Ok(log.into_owned())
+            } else {
+                Err(log.into_owned())
+            }
+        }
+    }
+
+
     pub fn create_kernel(&self, name: &str) -> Kernel {
         create_kernel(self, name)
     }
