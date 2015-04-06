@@ -1,16 +1,15 @@
 //! Error handling utilities.
 
-use cl::{CLStatus, cl_int};
+use cl::cl_int;
 use cl::CLStatus::CL_SUCCESS;
-use std::num::FromPrimitive;
 
 fn error_str(status_code: cl_int) -> String {
-    let status_opt: Option<CLStatus>
-        = FromPrimitive::from_isize(status_code as isize);
-
-    match status_opt {
-        Some(status) => status.to_string(),
-        None => format!("Unknown Error: {}", status_code)
+    // FIXME -- after FromPrimitive removed, we need a better way to handle
+    // this
+    match status_code {
+        0 => format!("CL_SUCCESS"),
+        -1 => format!("DEVICE_NOT_FOUND"),
+        _ => format!("Unknown Error: {}", status_code)
     }
 }
 

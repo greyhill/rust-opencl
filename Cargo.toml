@@ -31,3 +31,5 @@ path = "examples/demo_multidevice/main.rs"
 
 [dependencies]
 log = "*"
+libc = "*"
+

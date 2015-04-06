@@ -59,7 +59,6 @@ impl<T: Clone> Array3D<T> {
     }
 }
 
-#[unsafe_destructor]
 impl<T> Drop for Array3DCL<T> {
     fn drop(&mut self) {
         unsafe {
@@ -190,7 +189,6 @@ impl<T: Clone> Array2D<T> {
     }
 }
 
-#[unsafe_destructor]
 impl<T> Drop for Array2DCL<T> {
     fn drop(&mut self) {
         unsafe {

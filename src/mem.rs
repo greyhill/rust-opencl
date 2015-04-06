@@ -44,7 +44,6 @@ pub struct CLBuffer<T> {
     pub phantom: PhantomData<T>,
 }
 
-#[unsafe_destructor]
 impl<T> Drop for CLBuffer<T> {
     fn drop(&mut self) {
         unsafe {

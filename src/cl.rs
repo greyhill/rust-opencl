@@ -368,9 +368,9 @@ pub static CL_PROGRAM_BUILD_LOG:                         cl_uint = 0x1183;
 
 /* cl_build_status */
 pub static CL_BUILD_SUCCESS:                             cl_uint = 0;
-pub static CL_BUILD_NONE:                                cl_uint = -1;
-pub static CL_BUILD_ERROR:                               cl_uint = -2;
-pub static CL_BUILD_IN_PROGRESS:                         cl_uint = -3;
+pub static CL_BUILD_NONE:                                cl_uint = 0xFFFFFFFF;
+pub static CL_BUILD_ERROR:                               cl_uint = 0xFFFFFFFE;
+pub static CL_BUILD_IN_PROGRESS:                         cl_uint = 0xFFFFFFFD;
 
 /* cl_kernel_info */
 pub static CL_KERNEL_FUNCTION_NAME:                      cl_uint = 0x1190;

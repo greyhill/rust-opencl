@@ -59,10 +59,9 @@ macro_rules! cl_extension_loader {
 // Whatever functions we're calling aren't necessarily thread-safe, but since this is a low-level
 // interface we'll let the callers worry about that
 macro_rules! ext_struct_def {
-    () => (#[derive(Copy)] pub struct Functions;);
+    () => (pub struct Functions;);
     ($($function:ident, ($($arg:ident, $arg_type:ty),+) $ret:ty)+) =>
     (
-        #[derive(Copy)]
         pub struct Functions {
             $(pub $function: (extern fn ($($arg : $arg_type),+) -> $ret)),+
         }
