@@ -343,6 +343,26 @@ impl Context {
         }
     }
 
+    pub fn create_async_command_queue(&self, device: &Device) -> CommandQueue
+    {
+        unsafe
+        {
+            let mut errcode = 0;
+
+            let cqueue = clCreateCommandQueue(self.ctx,
+                                              device.id,
+                                              CL_QUEUE_PROFILING_ENABLE |
+                                              CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE,
+                                              (&mut errcode));
+
+            check(errcode, "Failed to create command queue!");
+
+            CommandQueue {
+                cqueue: cqueue
+            }
+        }
+    }
+
     pub fn create_program_from_source(&self, src: &str) -> Program
     {
         self.create_program_from_sources(&[src])
