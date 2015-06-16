@@ -76,7 +76,7 @@ pub struct cl_buffer_region {
 
 
 /// OpenCL error codes.
-#[derive(PartialEq, Debug, FromPrimitive)]
+#[derive(PartialEq, Debug)]
 #[repr()]
 pub enum CLStatus {
     CL_SUCCESS = 0,
