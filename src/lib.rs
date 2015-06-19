@@ -16,6 +16,10 @@ extern { }
 #[cfg(target_os = "linux")]
 extern { }
 
+#[link(name = "OpenCL")]
+#[cfg(target_os = "windows")]
+extern { }
+
 /// Low-level OpenCL bindings. These should primarily be used by the
 /// higher level features in this library.
 pub mod cl;

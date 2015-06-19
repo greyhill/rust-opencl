@@ -13,6 +13,7 @@ repository = "https://github.com/luqmana/rust-opencl"
 license = "MIT/Apache-2.0"
 description = "OpenCL bindings for Rust."
 keywords = ["opencl", "bindings", "ffi", "gpu", "compute"]
+build = "build.rs"
 
 [lib]
 name = "opencl"
