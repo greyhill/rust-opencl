@@ -461,7 +461,7 @@ impl CommandQueue
             let status = clGetCommandQueueInfo(
                 self.cqueue,
                 CL_QUEUE_DEVICE,
-                mem::size_of::<cl_device_id>() as u64,
+                mem::size_of::<cl_device_id>() as usize,
                 mem::transmute(&mut device_id),
                 &mut size as *mut libc::size_t);
             check(status, "Could not get device from command queue");
@@ -485,7 +485,7 @@ impl CommandQueue
                     ptr::null(),
                     global.get_ptr(),
                     match local {
-                        Some(ref l) => l.get_ptr() as *const u64,
+                        Some(ref l) => l.get_ptr() as *const usize,
                         None => ptr::null()
                     },
                     event_list_length,
@@ -514,7 +514,7 @@ impl CommandQueue
                     ptr::null(),
                     global.get_ptr(),
                     match local {
-                        Some(ref l) => l.get_ptr() as *const u64,
+                        Some(ref l) => l.get_ptr() as *const usize,
                         None => ptr::null()
                     },
                     event_list_length,
@@ -1030,6 +1030,7 @@ impl EventList for () {
 
 
 pub trait KernelIndex
+where Self: Sized
 {
     fn num_dimensions(dummy_self: Option<Self>) -> cl_uint;
     fn get_ptr(&self) -> *const libc::size_t;
